@@ -1,0 +1,19 @@
+{
+  "dependencies": {
+    "@solana/buffer-layout": "^4.0.1",
+    "@solana/web3.js": "^1.87.1",
+    "buffer": "^6.0.3",
+    "mz": "^2.7.0",
+    "prettier": "^3.0.3"
+  },
+  "scripts": {
+    "start": "ts-node src/client/main.ts",
+    "clean": "npm run clean:program",
+    "build": "cargo build-bpf --manifest-path=./src/program/Cargo.toml --bpf-out-dir=dist/program",
+    "deploy": "solana program deploy ./dist/program/hello_world.so"
+  },
+  "devDependencies": {
+    "@types/mz": "^2.7.5",
+    "@types/node": "^20.8.6"
+  }
+}
