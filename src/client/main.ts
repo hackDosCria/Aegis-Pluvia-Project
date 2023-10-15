@@ -14,6 +14,8 @@ import { Buffer } from "buffer";
 import * as BufferLayout from "@solana/buffer-layout";
 import * as borsh from "borsh";
 
+const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
+
 // Instructions
 interface ProgramInstruction {
   instruction: number;
@@ -44,15 +46,23 @@ function registerMeasurement(): Buffer {
 class MeasurementAccount {
   region = 0;
   current_measure = 0;
-  constructor(fields: { current_measure: number, region: number } | undefined = undefined) {
+  timestamp = 0;
+  constructor(
+    fields:
+      | { current_measure: number; region: number; timestamp: number }
+      | undefined = undefined,
+  ) {
     if (fields) {
-	  this.region = fields.region;
+      this.region = fields.region;
       this.current_measure = fields.current_measure;
+      this.timestamp = fields.timestamp;
     }
   }
 }
 
-const MeasurementSchema = { struct: { region: "u16", current_measure: "u16" } };
+const MeasurementSchema = {
+  struct: { region: "u16", current_measure: "u16", timestamp: "i64" },
+};
 
 const MEASUREMENT_SIZE = borsh.serialize(
   MeasurementSchema,
@@ -89,22 +99,18 @@ const MEASUREMENT_SIZE = borsh.serialize(
   await connection.confirmTransaction(airdropSignature);
 
   // Get Account
-  const SEED = 'hello';
+  const SEED = "hello";
   let userPubkey = await PublicKey.createWithSeed(
-	payerKeypair.publicKey,
-	SEED,
-	programId,
+    payerKeypair.publicKey,
+    SEED,
+    programId,
   );
 
   const userAccount = await connection.getAccountInfo(userPubkey);
-   if (userAccount === null) {
-    console.log(
-      'Creating account',
-      userPubkey.toBase58(),
-    );
-    const lamports = await connection.getMinimumBalanceForRentExemption(
-      MEASUREMENT_SIZE,
-    );
+  if (userAccount === null) {
+    console.log("Creating account", userPubkey.toBase58());
+    const lamports =
+      await connection.getMinimumBalanceForRentExemption(MEASUREMENT_SIZE);
 
     const transaction = new Transaction().add(
       SystemProgram.createAccountWithSeed({
@@ -120,9 +126,9 @@ const MEASUREMENT_SIZE = borsh.serialize(
     await sendAndConfirmTransaction(connection, transaction, [payerKeypair]);
   }
 
-  //register pluviometer 
+  //register pluviometer
   let instruction = new TransactionInstruction({
-    keys: [{pubkey: userPubkey, isSigner: false, isWritable: true}],
+    keys: [{ pubkey: userPubkey, isSigner: false, isWritable: true }],
     programId,
     data: registerDevice(),
   });
@@ -133,10 +139,10 @@ const MEASUREMENT_SIZE = borsh.serialize(
     [payerKeypair],
   );
   console.log("registration hash:", txHash);
-  
-  //register measurement 
+
+  //register measurement
   instruction = new TransactionInstruction({
-    keys: [{pubkey: userPubkey, isSigner: false, isWritable: true}],
+    keys: [{ pubkey: userPubkey, isSigner: false, isWritable: true }],
     programId,
     data: registerMeasurement(),
   });
@@ -146,6 +152,21 @@ const MEASUREMENT_SIZE = borsh.serialize(
     new Transaction().add(instruction),
     [payerKeypair],
   );
-  console.log("registration hash:", txHash);
+  console.log("measurement hash:", txHash);
+  
+  await sleep(30000);
+  
+  //register measurement
+  instruction = new TransactionInstruction({
+    keys: [{ pubkey: userPubkey, isSigner: false, isWritable: true }],
+    programId,
+    data: registerMeasurement(),
+  });
 
+  txHash = await sendAndConfirmTransaction(
+    connection,
+    new Transaction().add(instruction),
+    [payerKeypair],
+  );
+  console.log("new measurement hash:", txHash);
 })();

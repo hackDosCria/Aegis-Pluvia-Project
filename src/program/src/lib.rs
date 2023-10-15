@@ -3,7 +3,9 @@ use solana_program::{
     entrypoint,
     entrypoint::ProgramResult,
     pubkey::Pubkey,
-    msg, program_error::ProgramError,
+    msg,
+    program_error::ProgramError,
+    clock::Clock, sysvar::Sysvar,
 };
 use borsh::{BorshDeserialize, BorshSerialize};
 
@@ -14,6 +16,7 @@ use crate::instruction::Instruction;
 pub struct MeasurementAccount {
     pub region: u16,
     pub current_measure: u16,
+    pub timestamp: i64,
 }
 
 // declare and export the program's entrypoint
@@ -44,6 +47,22 @@ pub fn process_instruction(
             msg!("Registered new Pluviometer at region {}", val);
         },
         Instruction::Measure(val) => {
+            msg!("Getting time");
+            let current_time;
+            let clock = Clock::get(); 
+            match clock {
+                Ok(clock) => current_time = clock.unix_timestamp,
+                Err(_) => return Err(ProgramError::UnsupportedSysvar),
+            }
+            if user_account.timestamp == 0 {
+                user_account.timestamp = current_time;
+            }
+            else {
+                if current_time - user_account.timestamp < 30 {
+                    return Err(ProgramError::InvalidArgument);
+                }
+                user_account.timestamp = current_time;
+            }
             user_account.current_measure = val;
             user_account.serialize(&mut &mut account.data.borrow_mut()[..])?;
             msg!("Measured {}mm of rain in region {}", val, user_account.region);
