@@ -3,8 +3,10 @@
     "@solana/buffer-layout": "^4.0.1",
     "@solana/web3.js": "^1.87.1",
     "buffer": "^6.0.3",
+    "express": "^4.18.2",
     "mz": "^2.7.0",
-    "prettier": "^3.0.3"
+    "prettier": "^3.0.3",
+    "web3": "^4.1.2"
   },
   "scripts": {
     "start": "ts-node src/client/main.ts",
