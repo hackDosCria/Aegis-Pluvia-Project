@@ -47,28 +47,18 @@ pub fn process_instruction(
             msg!("Registered new Pluviometer at region {}", val);
         },
         Instruction::Measure(val) => {
-            msg!("Getting time");
-            let current_time;
-            let clock = Clock::get(); 
-            match clock {
-                Ok(clock) => current_time = clock.unix_timestamp,
-                Err(_) => return Err(ProgramError::UnsupportedSysvar),
-            }
-            if user_account.timestamp == 0 {
-                user_account.timestamp = current_time;
+            let clock = Clock::get()?;
+            let current_time = clock.unix_timestamp;
+            if user_account.timestamp != 0 && current_time - user_account.timestamp < 30 {
+                return Err(ProgramError::InvalidArgument);
             }
             else {
-                if current_time - user_account.timestamp < 30 {
-                    return Err(ProgramError::InvalidArgument);
-                }
                 user_account.timestamp = current_time;
             }
             user_account.current_measure = val;
             user_account.serialize(&mut &mut account.data.borrow_mut()[..])?;
-            msg!("Measured {}mm of rain in region {}", val, user_account.region);
+            msg!("Measured {}mm of rain in region {} at time {}", val, user_account.region, current_time);
         }
     }
-
-    // gracefully exit the program
     Ok(())
 }
