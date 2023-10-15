@@ -3,9 +3,7 @@ import { Keypair, PublicKey } from "@solana/web3.js";
 import path from "path";
 
 //Keypairs
-async function createKeypairFromFile(
-  filePath: string,
-): Promise<Keypair> {
+async function createKeypairFromFile(filePath: string): Promise<Keypair> {
   const secretKeyString = await fs.readFile(filePath, { encoding: "utf8" });
   const secretKey = Uint8Array.from(JSON.parse(secretKeyString));
   return Keypair.fromSecretKey(secretKey);
@@ -18,5 +16,11 @@ export async function getProgramId(): Promise<PublicKey> {
     "hello_world-keypair.json",
   );
   const programKeypair = await createKeypairFromFile(PROGRAM_KEYPAIR_PATH);
-  return (programKeypair.publicKey);
-};
+  return programKeypair.publicKey;
+}
+
+export async function getUserKeypair(): Promise<Keypair> {
+  const USER_KEYPAIR_PATH = path.resolve("/home/gcorreia/.config/solana/id.json")
+  const keypair = await createKeypairFromFile(USER_KEYPAIR_PATH);
+  return keypair;
+}

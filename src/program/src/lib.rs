@@ -49,7 +49,7 @@ pub fn process_instruction(
         Instruction::Measure(val) => {
             let clock = Clock::get()?;
             let current_time = clock.unix_timestamp;
-            if user_account.timestamp != 0 && current_time - user_account.timestamp < 30 {
+            if user_account.timestamp != 0 && current_time - user_account.timestamp < 60 {
                 return Err(ProgramError::InvalidArgument);
             }
             else {
