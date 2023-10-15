@@ -11,7 +11,6 @@ impl Instruction {
     pub fn unpack(input: &[u8]) -> Result<Self, ProgramError> {
         let (&tag, rest) = input.split_first().ok_or(ProgramError::InvalidInstructionData)?;
         match tag {
-            //0 => return Ok(Instruction::Register),
             0 => {
                 if rest.len() != 2 {
                     return Err(ProgramError::InvalidInstructionData);
