@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Aegis Pluvia</title>
+	<link rel="stylesheet" type="text/css" href="/styles.css">
+</head>
+<body>
+	<div class="vertical-container">
+		<h1>Rocinha and it's regions</h1>
+		<img src="/images/mapa_rocinha.png" alt="Map of the Rocinha favela">
+	</div>
+	<div class="vertical-container">
+		<p class="centered-text">
+			Currently there's only 1 pluviometer in Rocinha and it only covers
+			the regions 1 and 21 completely. Those are not areas of risk when it
+			comes to landslides. On this website you can see how our network would
+			work in order to measure rain in every region of Rocinha.
+		</p>
+	</div>
+	<div class="vertical-container">
+		<h1 class="centered-text">Insert measurements of each region</h1>
+		<div class="container" id="numberColumn"></div>
+		<button onclick="logAllNumbers()">register measurements</button>
+	</div>
+	<div class="horizontal-container">
+		<div class="data-container">
+			<h2 class="centered-text">Our data</h2>
+			<div class="data-container" id="blockchainMeasurements"></div>
+		</div>
+		<div class="data-container">
+			<h2 class="centered-text">Current data</h2>
+			<div class="vertical-container" id="currentMeasurements"></div>
+		</div>
+	</div>
+    <script src="/columns.js"></script>
+</body>
+</html>
