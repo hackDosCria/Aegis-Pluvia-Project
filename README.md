@@ -37,13 +37,13 @@ git clone git@github.com:hackDosCria/Aegis-Pluvia-Project.git
 Open your browser and go to http://localhost:3000 to see the application running.
 
 - http://localhost:3000/
-  - para ver grafico 
+  - for data visualization
 - http://localhost:3000//accountInfo/:accountPublicKeyHere
-  - to query information for a specific account, add the Public Key number in place of :accountPublicKeyHere
+  - to query information for a specific account. Add the Public Key number in place of :accountPublicKeyHere
 - http://localhost:3000/programAccounts/:programPublicKey
-  - para consultar todas as contas pertencentes ao programa fornecido Pubkey
+  - to query all accounts that belong to the program specified by the public key. Add the program public key in place of :programPublickey
 - http://localhost:3000/block/:blockNumberHere
-  - to query that particular block, add the block number in place of :BlockNumberHere
+  - to query that particular block. Add the block number in place of :BlockNumberHere
 
 
 ### Contact
