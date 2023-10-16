@@ -1,7 +1,12 @@
 const { Connection, clusterApiUrl } = require('@solana/web3.js');
+const express = require('express');
+const path = require('path');
 
 // Configurar a conexão com a rede Solana (Devnet)
 const connection = new Connection(clusterApiUrl('devnet'));
+
+const app = express();
+const PORT = 3000;
 
 async function getBlockInfo(blockhash) {
     try {
@@ -22,6 +27,15 @@ async function getBlockInfo(blockhash) {
 }
 
 // Substitua 'coloque_o_blockhash_aqui' pelo blockhash do bloco que você deseja consultar
-const blockhash = Buffer.from('6NWLhKfV6ECZYZJDTJLa4HimKeqXWfoUN5HpQZWMUWyz', 'base64');
-getBlockInfo(blockhash);
+//const blockhash = Buffer.from('6NWLhKfV6ECZYZJDTJLa4HimKeqXWfoUN5HpQZWMUWyz', 'base64');
+//getBlockInfo(blockhash);
 
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/', (req, res) => {
+	res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.listen(PORT, () => {
+	console.log(`Server is running at http://localhost:${PORT}`);
+});

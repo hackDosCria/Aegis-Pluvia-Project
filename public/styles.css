@@ -1,0 +1,42 @@
+/* styles.css */
+ 
+.vertical-container{
+    display: flex;
+	flex-direction: column; /* Stack items vertically */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+	padding: 5px;
+}
+.data-container{
+    display: flex;
+	flex-direction: column; /* Stack items vertically */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+	padding: 5px;
+}
+.horizontal-container{
+    display: flex;
+    justify-content: center; /* Center horizontally */
+	justify-content: space-around; /* Distribute items evenly along the main axis */
+    align-items: center; /* Center vertically */
+	padding: 5px;
+}
+.centered-text {
+    max-width: 50%;
+    margin: 0 auto; /* Center the text by setting left and right margin to auto */
+}
+.container {
+    display: flex;
+    flex-direction: row; /* Display items in a row */
+    flex-wrap: wrap; /* Allow items to wrap to a new line */
+    justify-content: center;
+    align-items: center;
+}
+.item {
+    display: flex; /* Use Flexbox to distribute the label and input evenly */
+    justify-content: space-between; /* Ensure space between label and input */
+    padding: 5px;
+    margin: 5px;
+    border: 1px solid black;
+    max-width: 80%; /* Limit the width of each item to 80% of the container width */
+}
